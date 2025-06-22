@@ -5,7 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import Chrome
 from selenium_stealth import stealth
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Browser:
     def __init__(self, web_driver_path:str):
@@ -33,9 +34,19 @@ class Browser:
         #self.driver.get('https://bot.sannysoft.com')
         self.driver.get('https://www.amazon.com')
 
-        search_bar = self.driver.find_element(By.XPATH, "/html/body/div[1]/header/div/div[1]/div[2]/div/form/div[2]/div[1]/input")
-        search_bar.send_keys("MacBook Air")
-        search_bar.send_keys(Keys.RETURN)
+    def check_dom_element(self, element_xpath:str) -> bool:
+        try:
+            element_exists:bool = False
+            wait = WebDriverWait(self.driver, 10)
+            wait.until(EC.visibility_of_element_located((By.XPATH, element_xpath)))
+            wait.until(EC.element_to_be_clickable((By.XPATH, element_xpath)))
+            
+            search_bar = self.driver.find_element(By.XPATH, element_xpath)
+            if search_bar.is_displayed() and search_bar.is_enabled():
+                element_exists = True
+            return element_exists
+        except Exception as ex:
+            print(f"Something went wrong during the execution. This is the full error message: {ex}")
 
     def close_browser(self) -> None:
         if self.driver is not None:
