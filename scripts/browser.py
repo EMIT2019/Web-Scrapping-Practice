@@ -69,6 +69,7 @@ class Browser:
     def make_search(self, search:list[str] | str = None) -> None:
         try:
             element_id:str = self.page_elements["search_bar"]["id"]
+            product_container:str = self.page_elements["products_list_container"]["xpath"]
             flag = self.check_dom_element(id=element_id)["flag"]
             if flag:
                 if isinstance(search, list):
