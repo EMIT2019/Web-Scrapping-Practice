@@ -1,7 +1,9 @@
 import json
 from browser import Browser
+from ExcelReader import ExcelReader
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
+from Values import Values as v
 
 def read_json_assets(file_path:str) -> dict:
     try:
@@ -13,11 +15,17 @@ def read_json_assets(file_path:str) -> dict:
         print(f"THIS IS THE ERROR MESSAGE: {ex}")
 
 def main() -> None:
-    driver_path:str = r"resources\drivers\chromedriver.exe"
-    json_file_path:str = r"resources\json\dom_assets.json"
+    #Reading and getting the data from the Excel file
+    excel:ExcelReader = ExcelReader(v.EXCEL_PATH.value)
+    excel.load_file_instance()
+    excel.get_sheetnames()
+    excel.load_worksheet()
+    excel.set_articles_list()
+
+    driver_path:str = v.DRIVER_PATH.value
+    json_file_path:str = v.JSON_PATH.value
     page_elements_metadata:dict = read_json_assets(json_file_path)
     url:str = 'https://www.amazon.com/?language=en_US&currency=USD'
-    search_list:list[str] = ["MackBook Air Pro", "Samsung Galaxy S20", "Office chair", "Office desktop", "A/C", "LED Ligths"]
     browser:Browser = Browser(driver_path, url, page_elements_metadata)
     
     try:
@@ -34,7 +42,7 @@ def main() -> None:
             values["element"].send_keys(Keys.ENTER)
 
         values = browser.check_dom_element(id=page_elements_metadata["search_bar"]["id"])
-        browser.make_search(search_list)
+        browser.make_search(excel.articles_list)
 
     except Exception as ex:
         print(f"THIS IS THE ERROR MESSAGE: {ex}")
