@@ -1,4 +1,5 @@
 import time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -15,6 +16,7 @@ class Browser:
         self.web_driver_path:str = web_driver_path
         self.web_page_url:str = web_url
         self.driver:Chrome = None
+        self.all_results:list[dict] = []
         self.page_elements:dict = page_elements_metadata
 
     def open_web_page(self) -> None:
@@ -79,12 +81,41 @@ class Browser:
                         search_bar.send_keys(item)
                         search_bar.send_keys(Keys.ENTER)
                         time.sleep(3)
+                        self.get_table_results(product_container)
                 elif isinstance(search, str):
                     search_bar.send_keys(search)
                     search_bar.send_keys(Keys.ENTER)
                     time.sleep(3)
+                    self.get_table_results(product_container)
             else:
                 self.close_browser()
+        except Exception as ex:
+            print(f"Something went wrong during the execution. This is the full error message: {ex}")
+
+    def get_table_results(self, xpath:str) -> None:
+        try:
+            element_info:dict = self.check_dom_element(xpath=xpath)
+            if element_info["flag"]:
+                table_items:list[WebElement] = element_info["element"].find_elements(By.XPATH, "./*")
+                for item in table_items:
+                    element_content:dict = self.get_table_item_information(item)
+                    if element_content is not None and element_content != str(None):
+                        self.all_results.append(element_content)
+        except Exception as ex:
+            print(f"Something went wrong during the execution. This is the full error message: {ex}")
+
+    def get_table_item_information(self, element:WebElement) -> dict:
+        try:
+            url_value:str = element.find_element(By.TAG_NAME, "a").get_attribute("href")
+            title_value:str = element.find_element(By.TAG_NAME, "h2").text
+            price_value:str = element.find_element(By.XPATH, self.page_elements["products_list_container"]["price_xpath"]).text
+            
+            item_information:dict = {
+                "item_url": url_value,
+                "item_title": title_value,
+                "item_price": price_value
+            }
+            return item_information
         except Exception as ex:
             print(f"Something went wrong during the execution. This is the full error message: {ex}")
 

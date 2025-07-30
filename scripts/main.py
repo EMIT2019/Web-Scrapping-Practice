@@ -1,6 +1,7 @@
 import json
 from browser import Browser
 from ExcelReader import ExcelReader
+from ExcelResultWrite import ExcelResultWriter
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
 from Values import Values as v
@@ -43,6 +44,9 @@ def main() -> None:
 
         values = browser.check_dom_element(id=page_elements_metadata["search_bar"]["id"])
         browser.make_search(excel.articles_list)
+
+        excel_writer:ExcelResultWriter = ExcelResultWriter("")
+        excel_writer.parse_to_dataframe(browser.all_results)
 
     except Exception as ex:
         print(f"THIS IS THE ERROR MESSAGE: {ex}")
