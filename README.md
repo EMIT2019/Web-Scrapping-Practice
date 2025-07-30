@@ -1,11 +1,15 @@
 # Amazon Automated Search
-This is a very very small and basic RPA / Web Scrapping project as a practice. This bot basically takes a list of items from an Excel workbook and then makes a search one by one, and for each search takes the first page results and for each result takes 3 parameters, the url, the price and the title of the item, then all the information is store in another Excel workbook, as simple as that, but evendough is small, it demostrates how powerfull is python por scrap websites and more.
+This is a simple RPA / Web Scraping project as a practice. This bot takes a list of items from an Excel workbook and searches for each item on Amazon. For every search, it scrapes the first page of results and extracts three parameters: the item's title, price, and URL. All the information is stored in a separate Excel workbook.
+
+Although it is a small project, it demonstrates how powerful Python is for scraping websites and more.
 
 ## Features
 
-- The bot takes all the content from the articles.xlsx so you can put there as many articles to search as you may want
-- I developed a solution to bypass Amazon’s anti-bot mechanisms.
-- To make the behavior of the bot more human I added some delay after each search, however those delays use static values so always the delay after a search is the same, so I probabbly shoud have implemented a logic to randomly set a value for the delay after each search.
+- Reads the list of articles to search from `articles.xlsx`.
+- Extracts title, price, and URL from the first page of results.
+- Saves the results into `results.xlsx`.
+- Implements basic anti-bot bypass techniques for Amazon.
+- Introduces static delays after each search to simulate human behavior (could be improved with random delays).
 
 ## Installation
 
@@ -35,10 +39,28 @@ All the dependencies are inside the root of the project so it should run without
 │   └── Values.py
 └── README.md
 ```
-You need the following libraries installed to run the project in your vs code wether you're using Anaconda or your default python enviroment.
+You need the following libraries installed to run the project in your vs code whether you're using Anaconda or your default python environment.
 
 * Pandas
 * Openpyxl
 * Selenium
 
-**Note: Make sure to have the appropriate chrome driver according your browser version.** 
+```bash
+pip install pandas openpyxl selenium
+```
+
+**Important - Make sure to have the appropriate chrome driver according to your browser version.** 
+
+## 💡 Notes
+
+* Delays are currently static. Consider randomizing them to better mimic human behavior
+* The project was built for learning purposes and can be improved in areas like error handling, dynamic waits, and user-agent rotation.
+
+
+## 🏷️ Tags
+
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
+![Selenium](https://img.shields.io/badge/Selenium-Automation-brightgreen?logo=selenium)
+![Excel](https://img.shields.io/badge/Excel-Automation-green?logo=microsoft-excel)
+![Web Scraping](https://img.shields.io/badge/Web--Scraping-Python%20%7C%20Selenium-orange)
+![Practice Project](https://img.shields.io/badge/Practice-Project-lightgrey)
